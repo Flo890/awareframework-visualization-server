@@ -1,0 +1,70 @@
+{
+  "mappings": {
+    "temperature": {
+      "sources": [
+        {
+          "source_table":"plugin_openweather",
+          "source_column":"temperature"
+        }
+      ]
+    },
+    "pressure": {
+      "sources": [
+        {
+          "source_table":"plugin_openweather",
+          "source_column":"pressure"
+        }
+      ]
+    },
+    "humidity": {
+      "sources": [
+        {
+          "source_table":"plugin_openweather",
+          "source_column":"humidity"
+        }
+      ]
+    },
+    "cloudiness": {
+      "sources": [
+        {
+          "source_table":"plugin_openweather",
+          "source_column":"cloudiness"
+        }
+      ]
+    },
+    "ambient_brightness": {
+      "sources": [
+        {
+          "source_table":"light",
+          "source_column":"double_light_lux"
+        }
+      ]
+    },
+    "ambient_noise_plugin": {
+      "sources": [
+        {
+          "source_table":"plugin_ambient_noise",
+          "source_column":"double_decibels"
+        }
+      ]
+    },
+    "ambient_noise_studentlife": {
+      "sources": [
+        {
+          "source_table":"plugin_studentlife_audio",
+          "source_column":"double_energy"
+        },
+        {
+          "source_table":"plugin_studentlife_audio_android",
+          "source_column":"double_energy"
+        }
+      ]
+    },
+    "time_in_conversation": {
+      "feature_generator": "TimeInConversationFeatureGenerator"
+    },
+    "phone_usage": {
+      "feature_generator": "PhoneUsageFeatureGenerator"
+    }
+  }
+}
