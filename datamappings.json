@@ -74,6 +74,9 @@
     },
     "activity_recognition_algo2": {
       "feature_generator": "ActivityRecognitionFeatureGeneratorAlgo2"
+    },
+    "linear_accelerometer": {
+      "feature_generator": "LinearAccelerometerFeatureGenerator"
     }
   }
 }

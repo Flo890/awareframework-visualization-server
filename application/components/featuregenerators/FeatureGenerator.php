@@ -33,19 +33,29 @@ abstract class FeatureGenerator
     }
 
     protected function getDateFormatForGranularity($granularity){
-        if($granularity== 'hourly') {
+        if($granularity == 'hourly') {
             return 'd_m_Y-H';
         }
         else if(preg_match('/^(\d+)minutes/', $granularity) == 1) {
             return 'd_m_Y-H_i';
         }
+    }
 
+    protected function getParseableDateFormatForGranularity($granularity){
+        if($granularity == 'hourly') {
+            return 'Y-m-d H:00';
+        }
+        else if(preg_match('/^(\d+)minutes/', $granularity) == 1) {
+            return 'Y-m-d H:i';
+        }
     }
 
     protected function getMillisOfGranularity($granularity){
-        switch($granularity){
-            case 'hourly':
-                return 1000*60*60;
+        if($granularity == 'hourly'){
+            return 1000*60*60;
+        }
+        else if(preg_match('/^(\d+)minutes/',$granularity, $matches) == 1){
+            return $matches[1]*60*1000;
         }
     }
 
