@@ -13,7 +13,7 @@ class PhoneUsageFeatureGenerator extends FeatureGenerator
 
     public function getData($device_id, $granularity)
     {
-        if(!$this->checkGranularitySupport(array('hourly'), $granularity)) return;
+        if(!$this->checkGranularitySupport(array('/hourly/','/^(\d+)minutes/'), $granularity)) return;
 
         $data = $this->dbreader->queryDatabaseForData('screen','screen_status', $device_id);
 
@@ -53,6 +53,10 @@ class PhoneUsageFeatureGenerator extends FeatureGenerator
             if ($granularity == 'hourly' || $granularity == 'max') {
                 $bin_size = 1000 * 60 * 60;
                 $bin_parse_data_format = 'Y-m-d H:00';
+            } else if (preg_match('/^(\d+)minutes/', $granularity, $matches) == 1){
+                $minutes = $matches[1];
+                $bin_size = $minutes*60*1000;
+                $bin_parse_data_format = 'Y-m-d H:i';
             } else {
                 echo "granularity $granularity not supported";
                 return;

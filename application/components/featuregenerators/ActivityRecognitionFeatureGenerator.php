@@ -13,7 +13,7 @@ class ActivityRecognitionFeatureGenerator extends FeatureGenerator
 
     public function getData($device_id, $granularity)
     {
-        if(!$this->checkGranularitySupport(array('hourly'), $granularity)) return;
+        if(!$this->checkGranularitySupport(array('/hourly/'), $granularity)) return;
 
         $data = $this->dbreader->queryDatabaseForData('plugin_google_activity_recognition','activity_name', $device_id);
         if (sizeof($data) > 0){

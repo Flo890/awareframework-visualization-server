@@ -21,12 +21,6 @@ if (isset($_GET['granularity'])) {
 
 $implemented_granularities = array('hourly'); // TODO implement more
 
-if(!in_array($granularity, $implemented_granularities)){
-    header( 'HTTP/1.1 400 Bad Request');
-    echo "parameter granularity must be one of ".print_r($implemented_granularities);
-    return;
-}
-
 $dbresponse_assoc = $feature_fetcher->getFeature($feature_name,$device_id, $granularity);
 
 

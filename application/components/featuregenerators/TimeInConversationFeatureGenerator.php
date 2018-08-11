@@ -27,7 +27,7 @@ class TimeInConversationFeatureGenerator extends FeatureGenerator
      */
     public function getData($device_id, $granularity)
     {
-        if(!$this->checkGranularitySupport(array('hourly'), $granularity)) return;
+        if(!$this->checkGranularitySupport(array('/hourly/'), $granularity)) return;
 
         $data = $this->dbreader->queryDatabaseForData('plugin_studentlife_audio_android','inference', $device_id);
 

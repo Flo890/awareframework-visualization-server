@@ -17,9 +17,15 @@ abstract class FeatureGenerator
     public abstract function getData($device_id, $granularity);
 
     protected function checkGranularitySupport($supported_granularities, $granularity){
-        if (!in_array($granularity, $supported_granularities)) {
+        $found = false;
+        foreach($supported_granularities as $granularity_regex){
+            if(preg_match($granularity_regex, $granularity) == 1){
+                $found = true;
+            }
+        }
+        if (!$found) {
             header('HTTP/1.1 400 Bad Request');
-            echo "TimeInConversationFeatureGenerator only supports granularity 'max' and 'hourly'";
+            echo "granularity $granularity not supported!!!!";
             return false;
         } else {
             return true;
@@ -27,11 +33,13 @@ abstract class FeatureGenerator
     }
 
     protected function getDateFormatForGranularity($granularity){
-        switch($granularity){
-            case 'hourly':
-                return 'd_m_Y-H';
-                break;
+        if($granularity== 'hourly') {
+            return 'd_m_Y-H';
         }
+        else if(preg_match('/^(\d+)minutes/', $granularity) == 1) {
+            return 'd_m_Y-H_i';
+        }
+
     }
 
     protected function getMillisOfGranularity($granularity){
