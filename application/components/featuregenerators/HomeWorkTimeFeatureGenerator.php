@@ -68,14 +68,7 @@ class HomeWorkTimeFeatureGenerator extends FeatureGenerator
         return $accumulated_data;
     }
 
-    private function getGranularityTimestampForTimestamp($granularity, $timestamp){
-        switch($granularity){
-            case 'hourly':
-                $dateTime = new DateTime(date('Y-m-d H:00',intval(round($timestamp/1000))));
-                return $dateTime->getTimestamp()*1000;
-                break;
-        }
-    }
+
 
     private function getWifiMapping($device_id){
         $meta_data = $this->dbreader->queryMetaDatabase('wifi_location', $device_id);

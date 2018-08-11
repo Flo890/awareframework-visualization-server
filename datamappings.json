@@ -68,6 +68,12 @@
     },
     "time_in_location_by_wifi": {
       "feature_generator": "HomeWorkTimeFeatureGenerator"
+    },
+    "activity_recognition": {
+      "feature_generator": "ActivityRecognitionFeatureGenerator"
+    },
+    "activity_recognition_algo2": {
+      "feature_generator": "ActivityRecognitionFeatureGeneratorAlgo2"
     }
   }
 }

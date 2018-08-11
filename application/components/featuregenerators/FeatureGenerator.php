@@ -41,4 +41,13 @@ abstract class FeatureGenerator
         }
     }
 
+    protected function getGranularityTimestampForTimestamp($granularity, $timestamp){
+        switch($granularity){
+            case 'hourly':
+                $dateTime = new DateTime(date('Y-m-d H:00',intval(round($timestamp/1000))));
+                return $dateTime->getTimestamp()*1000;
+                break;
+        }
+    }
+
 }
