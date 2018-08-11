@@ -18,7 +18,7 @@ class FeatureFetcher
         $this->mappings_config = json_decode(file_get_contents("../../datamappings.json"),true);
     }
 
-    public function getFeature($feature_name, $device_id, $granularity)
+    public function getFeature($feature_name, $device_id, $granularity, $from, $to)
     {
 
         if (isset($this->mappings_config["mappings"][$feature_name]["sources"])) {
@@ -32,8 +32,8 @@ class FeatureFetcher
                 $table_name = $aSource["source_table"];
                 $column_name = $aSource["source_column"];
 
-                $maybeResultData = $db_reader->queryDatabaseForData($table_name, $column_name, $device_id);
-                // TODO accumulate by granularity
+                $maybeResultData = $db_reader->queryDatabaseForData($table_name, $column_name, $device_id, $from, $to);
+
                 if (sizeof($maybeResultData) > 0) {
                     // return result of the first source which has any data for the given device_id (works because one device_id is never split over multiple tables)
                     return $maybeResultData;
@@ -51,7 +51,7 @@ class FeatureFetcher
             require_once "featuregenerators/$classname.php";
             $feature_generator = new $classname;
 
-            return $feature_generator->getData($device_id, $granularity);
+            return $feature_generator->getData($device_id, $granularity, $from, $to);
         }
 
     }

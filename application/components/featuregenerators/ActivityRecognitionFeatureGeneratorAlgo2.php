@@ -11,11 +11,11 @@ require_once 'FeatureGenerator.php';
 class ActivityRecognitionFeatureGeneratorAlgo2 extends FeatureGenerator
 {
 
-    public function getData($device_id, $granularity)
+    public function getData($device_id, $granularity, $from, $to)
     {
         if (!$this->checkGranularitySupport(array('/hourly/'), $granularity)) return;
 
-        $data = $this->dbreader->queryDatabaseForData('plugin_google_activity_recognition', 'activity_name', $device_id);
+        $data = $this->dbreader->queryDatabaseForData('plugin_google_activity_recognition', 'activity_name', $device_id, $from, $to);
         if (sizeof($data) > 0) {
             $usage_times = array(); // timestamp => milliseconds of phone use, starting at timestamp
             $last_state = -1;

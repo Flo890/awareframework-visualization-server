@@ -11,11 +11,11 @@ require_once 'FeatureGenerator.php';
 class PhoneUsageFeatureGenerator extends FeatureGenerator
 {
 
-    public function getData($device_id, $granularity)
+    public function getData($device_id, $granularity, $from, $to)
     {
         if(!$this->checkGranularitySupport(array('/hourly/','/^(\d+)minutes/'), $granularity)) return;
 
-        $data = $this->dbreader->queryDatabaseForData('screen','screen_status', $device_id);
+        $data = $this->dbreader->queryDatabaseForData('screen','screen_status', $device_id, $from, $to);
 
         $usage_times = array(); // timestamp => milliseconds of phone use, starting at timestamp
         $last_state = -1;

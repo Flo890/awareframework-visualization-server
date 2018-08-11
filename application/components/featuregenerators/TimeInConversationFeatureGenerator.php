@@ -25,11 +25,11 @@ class TimeInConversationFeatureGenerator extends FeatureGenerator
      *     - ideally the sum of all 4 categories should be 3600, but that is practically not the case TODO could normalize it to a sum of 3600
      *     - data granularity is hourly
      */
-    public function getData($device_id, $granularity)
+    public function getData($device_id, $granularity, $from, $to)
     {
         if(!$this->checkGranularitySupport(array('/hourly/'), $granularity)) return;
 
-        $data = $this->dbreader->queryDatabaseForData('plugin_studentlife_audio_android','inference', $device_id);
+        $data = $this->dbreader->queryDatabaseForData('plugin_studentlife_audio_android','inference', $device_id, $from, $to);
 
         $accumulatedHourly = array();
         if(sizeof($data) > 1) {

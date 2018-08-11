@@ -11,11 +11,11 @@ require_once 'FeatureGenerator.php';
 class LinearAccelerometerFeatureGenerator extends FeatureGenerator
 {
 
-    public function getData($device_id, $granularity)
+    public function getData($device_id, $granularity, $from, $to)
     {
         if (!$this->checkGranularitySupport(array('/hourly/','/^(\d+)minutes/'), $granularity)) return;
 
-        $data = $this->dbreader->queryDatabaseForData('linear_accelerometer', 'double_values_0+double_values_1+double_values_2 as axis_sum', $device_id);
+        $data = $this->dbreader->queryDatabaseForData('linear_accelerometer', 'double_values_0+double_values_1+double_values_2 as axis_sum', $device_id, $from, $to);
 
         $date_format = $this->getDateFormatForGranularity($granularity);
         $date_format_parseable = $this->getParseableDateFormatForGranularity($granularity);

@@ -27,11 +27,11 @@ class HomeWorkTimeFeatureGenerator extends FeatureGenerator
         }
     }
 
-    public function getData($device_id, $granularity)
+    public function getData($device_id, $granularity, $from, $to)
     {
         if(!$this->checkGranularitySupport(array('/hourly/'), $granularity)) return;
 
-        $data = $this->dbreader->queryDatabaseForData('wifi','ssid', $device_id);
+        $data = $this->dbreader->queryDatabaseForData('wifi','ssid', $device_id, $from, $to);
         $wifi_mappings = $this->getWifiMapping($device_id);
 
         $current_timestamp_millis = $this->getGranularityTimestampForTimestamp($granularity, $data[0]['timestamp']);

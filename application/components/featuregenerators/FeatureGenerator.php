@@ -14,7 +14,7 @@ abstract class FeatureGenerator
         $this->dbreader = new DBReader();
     }
 
-    public abstract function getData($device_id, $granularity);
+    public abstract function getData($device_id, $granularity, $from, $to);
 
     protected function checkGranularitySupport($supported_granularities, $granularity){
         $found = false;

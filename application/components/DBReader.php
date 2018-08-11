@@ -59,12 +59,12 @@ class DBReader
             }
     }
 
-    public function queryDatabaseForData($table_name, $column_name, $device_id){
+    public function queryDatabaseForData($table_name, $column_name, $device_id, $from, $to){
         // TODO vulnerable to SQL injection through datamappings.json!!
-        if (!($stmt = $this->mysqli->prepare("SELECT timestamp,$column_name FROM $table_name WHERE device_id=? ORDER BY timestamp ASC;"))){
+        if (!($stmt = $this->mysqli->prepare("SELECT timestamp,$column_name FROM $table_name WHERE device_id=? AND timestamp>=? AND timestamp <=? ORDER BY timestamp ASC;"))){
             echo "Prepare failed: (" . $this->mysqli->errno . ") " . $this->mysqli->error;
         }
-        if (!$stmt->bind_param("s", $device_id)) {
+        if (!$stmt->bind_param("sdd", $device_id, $from, $to)) {
             echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error;
         }
 

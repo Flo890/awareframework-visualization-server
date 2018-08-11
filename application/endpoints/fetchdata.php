@@ -18,10 +18,12 @@ if (isset($_GET['granularity'])) {
 } else {
     $granularity = 'hourly';
 }
+$from = isset($_GET['from']) ? $_GET['from']*1000 : 0;
+$to = isset($_GET['to']) ? $_GET['to']*1000 : 9999999999999;
 
 $implemented_granularities = array('hourly'); // TODO implement more
 
-$dbresponse_assoc = $feature_fetcher->getFeature($feature_name,$device_id, $granularity);
+$dbresponse_assoc = $feature_fetcher->getFeature($feature_name,$device_id, $granularity, $from, $to);
 
 
 echo json_encode($dbresponse_assoc);
