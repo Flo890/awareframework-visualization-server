@@ -65,6 +65,9 @@
     },
     "phone_usage": {
       "feature_generator": "PhoneUsageFeatureGenerator"
+    },
+    "time_in_location_by_wifi": {
+      "feature_generator": "HomeWorkTimeFeatureGenerator"
     }
   }
 }

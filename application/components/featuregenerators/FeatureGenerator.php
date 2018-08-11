@@ -20,7 +20,24 @@ abstract class FeatureGenerator
         if (!in_array($granularity, $supported_granularities)) {
             header('HTTP/1.1 400 Bad Request');
             echo "TimeInConversationFeatureGenerator only supports granularity 'max' and 'hourly'";
-            return;
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    protected function getDateFormatForGranularity($granularity){
+        switch($granularity){
+            case 'hourly':
+                return 'd_m_Y-H';
+                break;
+        }
+    }
+
+    protected function getMillisOfGranularity($granularity){
+        switch($granularity){
+            case 'hourly':
+                return 1000*60*60;
         }
     }
 

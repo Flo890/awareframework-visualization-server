@@ -13,7 +13,7 @@ class PhoneUsageFeatureGenerator extends FeatureGenerator
 
     public function getData($device_id, $granularity)
     {
-        $this->checkGranularitySupport(array('max','hourly'), $granularity);
+        if(!$this->checkGranularitySupport(array('hourly'), $granularity)) return;
 
         $data = $this->dbreader->queryDatabaseForData('screen','screen_status', $device_id);
 
@@ -49,9 +49,9 @@ class PhoneUsageFeatureGenerator extends FeatureGenerator
 
 
 
+            $accumulator_data_format = $this->getDateFormatForGranularity($granularity);
             if ($granularity == 'hourly' || $granularity == 'max') {
                 $bin_size = 1000 * 60 * 60;
-                $accumulator_data_format = 'd_m_Y-H';
                 $bin_parse_data_format = 'Y-m-d H:00';
             } else {
                 echo "granularity $granularity not supported";
@@ -62,8 +62,6 @@ class PhoneUsageFeatureGenerator extends FeatureGenerator
                 $usage_start_time_millis = $a_usage['start_timestamp'];
                 $usage_start_time_bin = date($accumulator_data_format, intval(round($usage_start_time_millis/1000)));
                 $bin_time = new DateTime(date($bin_parse_data_format, intval(round($usage_start_time_millis/1000))));
-
-                $duration = $a_usage['duration_millis'];
 
                 if (date($accumulator_data_format,intval(round(($usage_start_time_millis + $a_usage['duration_millis'])/1000))) == $usage_start_time_bin) {
                     // if usage stays completely within one bin, simply add it

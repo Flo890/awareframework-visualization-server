@@ -27,7 +27,7 @@ class TimeInConversationFeatureGenerator extends FeatureGenerator
      */
     public function getData($device_id, $granularity)
     {
-        $this->checkGranularitySupport(array('hourly','max'),$granularity);
+        if(!$this->checkGranularitySupport(array('hourly'), $granularity)) return;
 
         $data = $this->dbreader->queryDatabaseForData('plugin_studentlife_audio_android','inference', $device_id);
 
@@ -44,7 +44,7 @@ class TimeInConversationFeatureGenerator extends FeatureGenerator
                 $diff_millis = $millis_timestamp_iplusone - $millis_timestamp_i;
                 $diff_secs = intval(round($diff_millis / 1000));
                 // if this is the last datapoint within an clock-hour, limit the diff (so that it not becomes e.g. 9000 if there are no data points in the following 2 hours)
-                $day_hour = date('d_m_Y-H', $unix_timestamp_i);
+                $day_hour = date($this->getDateFormatForGranularity($granularity), $unix_timestamp_i);
                 $date_of_hour = new DateTime(date('Y-m-d H:00', $unix_timestamp_i));
                 $secs_to_next_full_hour = 3600 - ($unix_timestamp_i - $date_of_hour->getTimestamp());
                 $limited_diff_secs = min($diff_secs, $secs_to_next_full_hour);

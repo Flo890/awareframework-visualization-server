@@ -16,10 +16,10 @@ $device_id = $_GET['device_id'];
 if (isset($_GET['granularity'])) {
     $granularity = $_GET['granularity'];
 } else {
-    $granularity = 'max';
+    $granularity = 'hourly';
 }
 
-$implemented_granularities = array('max'); // TODO implement more
+$implemented_granularities = array('hourly'); // TODO implement more
 
 if(!in_array($granularity, $implemented_granularities)){
     header( 'HTTP/1.1 400 Bad Request');
