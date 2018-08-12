@@ -134,4 +134,60 @@ class DBReader
         }
         return $assoc[0]['a1'];
     }
+
+    public function runSqlScriptOnAwareStudyDb($script_path){
+        // create table in aware study database
+        require '../config/aware_database.php';
+        $active_db_config = $db[$active_server];
+        $command = 'mysql'
+            . ' --host=' . $active_db_config['hostname']
+            . ' --user=' . $active_db_config['username']
+            . ' --password=' . $active_db_config['password']
+            . ' --database=' . $active_db_config['database']
+            . ' --execute="SOURCE ' . $script_path
+        ;
+        $output1 = shell_exec($command);
+        echo $output1;
+    }
+
+    public function getLatestPerformetricSyncDate(){
+        // - first try to get latest sync date from report database
+        if (!($stmt = $this->mysqli->prepare("select max(`to`) as latest_to from performetric_fatigue_report;"))){
+            echo "Prepare failed: (" . $this->mysqli_meta->errno . ") " . $this->mysqli_meta->error;
+        }
+
+        if (!$stmt->execute()) {
+            echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;
+        }
+
+        $res = $stmt->get_result();
+        $stmt->close();
+        $assoc = $res->fetch_all(MYSQLI_ASSOC);
+        if(isset($assoc[0]['latest_to'])){
+            echo "using last report date";
+            $datetime = new DateTime($assoc[0]['latest_to']);
+            return $datetime->getTimestamp();
+        }
+
+        // - otherwise, use lowest study join date from participants meta table
+        if (!($stmt = $this->mysqli_meta->prepare("select min(study_join) as first_study_join from study_participants;"))){
+            echo "Prepare failed: (" . $this->mysqli_meta->errno . ") " . $this->mysqli_meta->error;
+        }
+
+        if (!$stmt->execute()) {
+            echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;
+        }
+
+        $res = $stmt->get_result();
+        $stmt->close();
+        $assoc = $res->fetch_all(MYSQLI_ASSOC);
+        if(isset($assoc[0]['first_study_join'])){
+            echo "using join date";
+            $datetime = new DateTime($assoc[0]['first_study_join']);
+            return $datetime->getTimestamp();
+        }
+
+        // - as fallback, return now
+        return time();
+    }
 }
