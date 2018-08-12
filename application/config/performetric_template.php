@@ -18,7 +18,6 @@ $performetric = array(
     'grant_type' => 'password',
     'password' => 'change me',
     'username' => 'change_me',
-    'company_id' => 'change_me',
     'access_token_url' => 'change me',
     // -- sync settings --
     'data_frequency' => 5,  // data frequency in minutes

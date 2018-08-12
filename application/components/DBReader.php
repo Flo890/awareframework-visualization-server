@@ -190,4 +190,37 @@ class DBReader
         // - as fallback, return now
         return time();
     }
+
+    public function insertFatigueLog($from,$to,$performetric_obj){
+        $db_dateformat = 'Y-m-d H:i';
+        $from_formatted = date($db_dateformat,$from);
+        $to_formatted = date($db_dateformat,$to);
+        if (!($stmt = $this->mysqli->prepare("insert into performetric_fatigue_report (`user`,fatigue_avg,minutes_no_fatigue,minutes_moderate_fatigue,minutes_extreme_fatigue,rest_breaks,fatigue_messages,`from`,`to`) values(?,?,?,?,?,?,?,?,?);"))){
+            echo "Prepare failed: (" . $this->mysqli->errno . ") " . $this->mysqli->error;
+        }
+        foreach($performetric_obj->users as $a_users_fatigue){
+            if (!$stmt->bind_param(
+                "sddddddss",
+                $a_users_fatigue->user,
+                $a_users_fatigue->metrics->fatigueAvg,
+                $a_users_fatigue->metrics->minutesNoFatigue,
+                $a_users_fatigue->metrics->minutesModerateFatigue,
+                $a_users_fatigue->metrics->minutesExtremeFatigue,
+                $a_users_fatigue->metrics->restBreaks,
+                $a_users_fatigue->metrics->fatigueMessages,
+                $from_formatted,
+                $to_formatted
+            )) {
+                echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error;
+            }
+            if (!$stmt->execute()) {
+                echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;
+            }
+            if($stmt->affected_rows != 1){
+                echo "insert affected rows was not 1<br/>";
+            }
+        }
+
+        $stmt->close();
+    }
 }
