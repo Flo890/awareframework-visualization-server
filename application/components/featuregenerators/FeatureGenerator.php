@@ -39,6 +39,9 @@ abstract class FeatureGenerator
         else if(preg_match('/^(\d+)minutes/', $granularity) == 1) {
             return 'd_m_Y-H_i';
         }
+        else if ($granularity == 'daily') {
+            return 'd_m_Y';
+        }
     }
 
     protected function getParseableDateFormatForGranularity($granularity){
@@ -47,6 +50,9 @@ abstract class FeatureGenerator
         }
         else if(preg_match('/^(\d+)minutes/', $granularity) == 1) {
             return 'Y-m-d H:i';
+        }
+        else if ($granularity == 'daily') {
+            return 'Y-m-d';
         }
     }
 
