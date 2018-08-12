@@ -113,4 +113,25 @@ class DBReader
         $config = json_decode($config_json);
         return $config;
     }
+
+    public function getDigestAnswer($device_id, $participant_id){
+        if (!($stmt = $this->mysqli_meta->prepare("select md5(CONCAT(participant_id,':Geschützter Aware Bereich:',password)) as a1 from study_participants where participant_id=? and device_id=?;"))){
+            echo "Prepare failed: (" . $this->mysqli_meta->errno . ") " . $this->mysqli_meta->error;
+        }
+        if (!$stmt->bind_param("ds", $participant_id, $device_id)) {
+            echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error;
+        }
+
+        if (!$stmt->execute()) {
+            echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;
+        }
+
+        $res = $stmt->get_result();
+        $stmt->close();
+        $assoc = $res->fetch_all(MYSQLI_ASSOC);
+        if(sizeof($assoc) != 1){
+            return false;
+        }
+        return $assoc[0]['a1'];
+    }
 }
