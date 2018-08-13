@@ -32,7 +32,12 @@ class FeatureFetcher
                 $table_name = $aSource["source_table"];
                 $column_name = $aSource["source_column"];
 
-                $maybeResultData = $db_reader->queryDatabaseForData($table_name, $column_name, $device_id, $from, $to);
+                $granularity_millis = 1;
+                if(preg_match('/^(\d+)minutes/', $granularity, $matches) == 1){
+                    $granularity_millis = intval($matches[0])*60*1000;
+                }
+
+                $maybeResultData = $db_reader->queryDatabaseForDataAccumulated($table_name, $column_name, $device_id, $from, $to, $granularity_millis);
 
                 // TODO accumulate according to granularity
 

@@ -24,8 +24,12 @@ if (isset($_GET['granularity'])) {
 } else {
     $granularity = 'hourly';
 }
-$from = isset($_GET['from']) ? $_GET['from']*1000 : 0;
-$to = isset($_GET['to']) ? $_GET['to']*1000 : 9999999999999;
+
+// input tolerance
+if ($granularity == 'hourly') $granularity = '60minutes';
+
+$from = isset($_GET['from']) ? intval($_GET['from'])*1000 : 0;
+$to = isset($_GET['to']) ? intval($_GET['to'])*1000 : 9999999999999;
 
 require_once('../components/DBReader.php');
 $db_reader = new DBReader();

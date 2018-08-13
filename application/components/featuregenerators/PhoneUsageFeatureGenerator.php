@@ -97,7 +97,16 @@ class PhoneUsageFeatureGenerator extends FeatureGenerator
                 }
             }
         }
-        return $accumulated_bins;
+
+        $correct_format = array();
+        foreach($accumulated_bins as $a_timestamp => $a_value){
+            array_push($correct_format, array(
+                'timestamp' => date_create_from_format($accumulator_data_format,$a_timestamp)->getTimestamp()*1000,
+                'value' => $a_value
+            ));
+        }
+
+        return $correct_format;
 
     }
 }

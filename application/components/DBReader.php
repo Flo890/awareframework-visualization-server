@@ -77,6 +77,24 @@ class DBReader
         return $res->fetch_all(MYSQLI_ASSOC);
     }
 
+    public function queryDatabaseForDataAccumulated($table_name, $column_name, $device_id, $from, $to, $granularity_millis = 1){
+        // TODO vulnerable to SQL injection through datamappings.json!!
+        if (!($stmt = $this->mysqli->prepare("SELECT timestamp, AVG($column_name) as $column_name FROM $table_name WHERE device_id=? AND timestamp>=? AND timestamp <=? GROUP BY timestamp DIV $granularity_millis ORDER BY timestamp ASC;"))){
+            echo "Prepare failed: (" . $this->mysqli->errno . ") " . $this->mysqli->error;
+        }
+        if (!$stmt->bind_param("sdd", $device_id, $from, $to)) {
+            echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error;
+        }
+
+        if (!$stmt->execute()) {
+            echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;
+        }
+
+        $res = $stmt->get_result();
+        $stmt->close();
+        return $res->fetch_all(MYSQLI_ASSOC);
+    }
+
     public function queryMetaDatabase($table_name, $device_id) {
         // TODO vulnerable to SQL injection!!
         if (!($stmt = $this->mysqli_meta->prepare("SELECT * FROM $table_name WHERE device_id=? ORDER BY _id ASC;"))){
@@ -194,6 +212,7 @@ class DBReader
     public function insertFatigueLog($from,$to,$performetric_obj, $user_mapping){
         $db_dateformat = 'Y-m-d H:i';
         $from_formatted = date($db_dateformat,$from);
+        $from_millis = $from*1000;
         $to_formatted = date($db_dateformat,$to);
         if (!($stmt = $this->mysqli->prepare("insert into performetric_fatigue_report (`user`,device_id,fatigue_avg,minutes_no_fatigue,minutes_moderate_fatigue,minutes_extreme_fatigue,rest_breaks,fatigue_messages,`from`,`timestamp`,`to`) values(?,?,?,?,?,?,?,?,?,?,?);"))){
             echo "Prepare failed: (" . $this->mysqli->errno . ") " . $this->mysqli->error;
@@ -210,7 +229,7 @@ class DBReader
                 $a_users_fatigue->metrics->restBreaks,
                 $a_users_fatigue->metrics->fatigueMessages,
                 $from_formatted,
-                $from,
+                $from_millis,
                 $to_formatted
             )) {
                 echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error;

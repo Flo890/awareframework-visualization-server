@@ -11,5 +11,6 @@ CREATE TABLE IF NOT EXISTS performetric_fatigue_report(
   rest_breaks INT,
   fatigue_messages INT,
  `from` DATETIME NOT NULL,
- `to` DATETIME NOT NULL
+ `to` DATETIME NOT NULL,
+  timestamp DOUBLE NOT NULL
 );
