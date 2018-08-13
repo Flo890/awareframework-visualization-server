@@ -34,6 +34,8 @@ class FeatureFetcher
 
                 $maybeResultData = $db_reader->queryDatabaseForData($table_name, $column_name, $device_id, $from, $to);
 
+                // TODO accumulate according to granularity
+
                 if (sizeof($maybeResultData) > 0) {
                     // return result of the first source which has any data for the given device_id (works because one device_id is never split over multiple tables)
                     return $maybeResultData;

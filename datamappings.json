@@ -80,6 +80,14 @@
     },
     "sleep": {
       "feature_generator": "SleepFeatureGenerator"
+    },
+    "fatigue_level": {
+      "sources": [
+        {
+          "source_table":"performetric_fatigue_report",
+          "source_column":"fatigue_avg"
+        }
+      ]
     }
   }
 }

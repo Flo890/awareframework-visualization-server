@@ -114,11 +114,11 @@ class DBReader
         return $config;
     }
 
-    public function getDigestAnswer($device_id, $participant_id){
-        if (!($stmt = $this->mysqli_meta->prepare("select md5(CONCAT(participant_id,':Geschützter Aware Bereich:',password)) as a1 from study_participants where participant_id=? and device_id=?;"))){
+    public function getDigestAnswer($participant_id){
+        if (!($stmt = $this->mysqli_meta->prepare("select md5(CONCAT(participant_id,':Geschützter Aware Bereich:',password)) as a1 from study_participants where participant_id=?;"))){
             echo "Prepare failed: (" . $this->mysqli_meta->errno . ") " . $this->mysqli_meta->error;
         }
-        if (!$stmt->bind_param("ds", $participant_id, $device_id)) {
+        if (!$stmt->bind_param("d", $participant_id)) {
             echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error;
         }
 
@@ -153,7 +153,7 @@ class DBReader
     public function getLatestPerformetricSyncDate(){
         // - first try to get latest sync date from report database
         if (!($stmt = $this->mysqli->prepare("select max(`to`) as latest_to from performetric_fatigue_report;"))){
-            echo "Prepare failed: (" . $this->mysqli_meta->errno . ") " . $this->mysqli_meta->error;
+            echo "Prepare failed: (" . $this->mysqli->errno . ") " . $this->mysqli->error;
         }
 
         if (!$stmt->execute()) {
@@ -191,17 +191,18 @@ class DBReader
         return time();
     }
 
-    public function insertFatigueLog($from,$to,$performetric_obj){
+    public function insertFatigueLog($from,$to,$performetric_obj, $user_mapping){
         $db_dateformat = 'Y-m-d H:i';
         $from_formatted = date($db_dateformat,$from);
         $to_formatted = date($db_dateformat,$to);
-        if (!($stmt = $this->mysqli->prepare("insert into performetric_fatigue_report (`user`,fatigue_avg,minutes_no_fatigue,minutes_moderate_fatigue,minutes_extreme_fatigue,rest_breaks,fatigue_messages,`from`,`to`) values(?,?,?,?,?,?,?,?,?);"))){
+        if (!($stmt = $this->mysqli->prepare("insert into performetric_fatigue_report (`user`,device_id,fatigue_avg,minutes_no_fatigue,minutes_moderate_fatigue,minutes_extreme_fatigue,rest_breaks,fatigue_messages,`from`,`timestamp`,`to`) values(?,?,?,?,?,?,?,?,?,?,?);"))){
             echo "Prepare failed: (" . $this->mysqli->errno . ") " . $this->mysqli->error;
         }
         foreach($performetric_obj->users as $a_users_fatigue){
             if (!$stmt->bind_param(
-                "sddddddss",
+                "ssddddddsds",
                 $a_users_fatigue->user,
+                $user_mapping[$a_users_fatigue->user]['device_id'],
                 $a_users_fatigue->metrics->fatigueAvg,
                 $a_users_fatigue->metrics->minutesNoFatigue,
                 $a_users_fatigue->metrics->minutesModerateFatigue,
@@ -209,6 +210,7 @@ class DBReader
                 $a_users_fatigue->metrics->restBreaks,
                 $a_users_fatigue->metrics->fatigueMessages,
                 $from_formatted,
+                $from,
                 $to_formatted
             )) {
                 echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error;
@@ -222,5 +224,49 @@ class DBReader
         }
 
         $stmt->close();
+    }
+
+    public function getPerformetricUserMapping(){
+        if (!($stmt = $this->mysqli_meta->prepare("select user_mapping_study2performetric.participant_id, user_email, device_id from user_mapping_study2performetric join study_participants;"))){
+            echo "Prepare failed: (" . $this->mysqli_meta->errno . ") " . $this->mysqli_meta->error;
+        }
+
+        if (!$stmt->execute()) {
+            echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;
+        }
+
+        $res = $stmt->get_result();
+        $stmt->close();
+        $assoc = $res->fetch_all(MYSQLI_ASSOC);
+        $mapping = array();
+        foreach($assoc as $a_entry){
+            $mapping[$a_entry['user_email']] = array(
+                'device_id' => $a_entry['device_id'],
+                'participant_id' => $a_entry['participant_id']
+            );
+        }
+        return $mapping;
+    }
+
+    public function getDeviceIdForParticipantId($participant_id){
+        if (!($stmt = $this->mysqli_meta->prepare("select device_id from study_participants where participant_id=?;"))){
+            echo "Prepare failed: (" . $this->mysqli_meta->errno . ") " . $this->mysqli_meta->error;
+        }
+        if (!$stmt->bind_param(
+            "d",$participant_id
+        )) {
+            echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error;
+        }
+        if (!$stmt->execute()) {
+            echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;
+        }
+
+        $res = $stmt->get_result();
+        $stmt->close();
+        if($res->num_rows < 1){
+            die("no device_id found for participant_id $participant_id in table study_participants");
+        }
+        $assoc = $res->fetch_all(MYSQLI_ASSOC);
+        return $assoc[0]['device_id'];
     }
 }

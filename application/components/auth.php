@@ -8,8 +8,6 @@
  * username is the participant_id
  */
 
-require_once 'DBReader.php';
-$db_reader = new DBReader();
 
 $realm = 'Geschützter Aware Bereich'; // to change, also change in DBReader
 
@@ -29,8 +27,13 @@ if (!($daten = http_digest_parse($_SERVER['PHP_AUTH_DIGEST']))) {
     die('Falsche Zugangsdaten! (digest parse)');
 }
 
+// ensure that login-username matches queried participant_id
+if ($participant_id != $daten['username']){
+    die('entered username does not match query participant_id');
+}
+
 // Erzeugen einer gültigen Antwort
-$A1 = $db_reader->getDigestAnswer($device_id, $daten['username']);
+$A1 = $db_reader->getDigestAnswer($daten['username']);
 if ($A1 == false){
     header('HTTP/1.1 401 Unauthorized');
     die('Falsche Zugangsdaten! (db check)');

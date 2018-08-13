@@ -71,7 +71,8 @@ class PerformetricSyncer
         if(sizeof($response_raw) > 0 && sizeof($response_raw[0]) > 0) {
             $response_json = $response_raw[0][0];
             if (isset($response_json->users)) {
-                $this->db_reader->insertFatigueLog($from, $to, $response_json);
+                $user_mapping = $this->db_reader->getPerformetricUserMapping();
+                $this->db_reader->insertFatigueLog($from, $to, $response_json, $user_mapping);
             } else {
                 echo "no data available between $from_formatted and $to_formatted. sever returned: $server_output<br/>";
             }
