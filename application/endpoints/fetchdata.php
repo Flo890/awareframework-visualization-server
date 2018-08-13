@@ -6,6 +6,12 @@
  * device_id       (required)
  * granularity     one of [max] (optional, default: max)
  */
+header("Access-Control-Allow-Origin: *"); // TODO remove as soon as client hosted from within this project
+header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization');
+// answer OPTIONS pre flight request immediately
+if($_SERVER['REQUEST_METHOD'] == 'OPTIONS'){
+    die('ok');
+}
 
 require_once('../components/FeatureFetcher.php');
 

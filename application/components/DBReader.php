@@ -114,11 +114,13 @@ class DBReader
         return $config;
     }
 
-    public function getDigestAnswer($participant_id){
-        if (!($stmt = $this->mysqli_meta->prepare("select md5(CONCAT(participant_id,':Geschützter Aware Bereich:',password)) as a1 from study_participants where participant_id=?;"))){
+    public function checkUsernamePassword($username, $password){
+        if (!($stmt = $this->mysqli_meta->prepare("SELECT participant_id from study_participants where participant_id=? and password=?;"))){
             echo "Prepare failed: (" . $this->mysqli_meta->errno . ") " . $this->mysqli_meta->error;
         }
-        if (!$stmt->bind_param("d", $participant_id)) {
+        $password_hash = md5($password);
+
+        if (!$stmt->bind_param("ds", $username, $password_hash)) {
             echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error;
         }
 
@@ -128,11 +130,9 @@ class DBReader
 
         $res = $stmt->get_result();
         $stmt->close();
-        $assoc = $res->fetch_all(MYSQLI_ASSOC);
-        if(sizeof($assoc) != 1){
-            return false;
-        }
-        return $assoc[0]['a1'];
+        $assoc = mysqli_fetch_assoc($res);
+
+        return sizeof($assoc==1) && $assoc['participant_id'] == $username;
     }
 
     public function runSqlScriptOnAwareStudyDb($script_path){
