@@ -6,7 +6,8 @@
           "source_table":"plugin_openweather",
           "source_column":"temperature"
         }
-      ]
+      ],
+      "display_name": "outside temperature"
     },
     "pressure": {
       "sources": [
@@ -14,7 +15,8 @@
           "source_table":"plugin_openweather",
           "source_column":"pressure"
         }
-      ]
+      ],
+      "display_name": "air pressure"
     },
     "humidity": {
       "sources": [
@@ -22,7 +24,8 @@
           "source_table":"plugin_openweather",
           "source_column":"humidity"
         }
-      ]
+      ],
+      "display_name": "humidity"
     },
     "cloudiness": {
       "sources": [
@@ -30,7 +33,8 @@
           "source_table":"plugin_openweather",
           "source_column":"cloudiness"
         }
-      ]
+      ],
+      "display_name": "cloudiness"
     },
     "ambient_brightness": {
       "sources": [
@@ -38,7 +42,8 @@
           "source_table":"light",
           "source_column":"double_light_lux"
         }
-      ]
+      ],
+      "display_name": "ambient brightness"
     },
     "ambient_noise_plugin": {
       "sources": [
@@ -46,7 +51,8 @@
           "source_table":"plugin_ambient_noise",
           "source_column":"double_decibels"
         }
-      ]
+      ],
+      "display_name": "ambient noise (plugin)"
     },
     "ambient_noise_studentlife": {
       "sources": [
@@ -58,28 +64,36 @@
           "source_table":"plugin_studentlife_audio_android",
           "source_column":"double_energy"
         }
-      ]
+      ],
+      "display_name": "ambient noise (studentlife)"
     },
     "time_in_conversation": {
-      "feature_generator": "TimeInConversationFeatureGenerator"
+      "feature_generator": "TimeInConversationFeatureGenerator",
+      "display_name": "time spent in conversation"
     },
     "phone_usage": {
-      "feature_generator": "PhoneUsageFeatureGenerator"
+      "feature_generator": "PhoneUsageFeatureGenerator",
+      "display_name": "phone usage times"
     },
     "time_in_location_by_wifi": {
-      "feature_generator": "HomeWorkTimeFeatureGenerator"
+      "feature_generator": "HomeWorkTimeFeatureGenerator",
+      "display_name": "location"
     },
     "activity_recognition": {
-      "feature_generator": "ActivityRecognitionFeatureGenerator"
+      "feature_generator": "ActivityRecognitionFeatureGenerator",
+      "display_name": "activity (algo1)"
     },
     "activity_recognition_algo2": {
-      "feature_generator": "ActivityRecognitionFeatureGeneratorAlgo2"
+      "feature_generator": "ActivityRecognitionFeatureGeneratorAlgo2",
+      "display_name": "activity (algo2)"
     },
     "linear_accelerometer": {
-      "feature_generator": "LinearAccelerometerFeatureGenerator"
+      "feature_generator": "LinearAccelerometerFeatureGenerator",
+      "display_name": "phone movement"
     },
     "sleep": {
-      "feature_generator": "SleepFeatureGenerator"
+      "feature_generator": "SleepFeatureGenerator",
+      "display_name": "sleep amount"
     },
     "fatigue_level": {
       "sources": [
@@ -87,7 +101,8 @@
           "source_table":"performetric_fatigue_report",
           "source_column":"fatigue_avg"
         }
-      ]
+      ],
+      "display_name": "fatigue level"
     }
   }
 }

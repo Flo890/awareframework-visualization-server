@@ -79,7 +79,7 @@ class DBReader
 
     public function queryDatabaseForDataAccumulated($table_name, $column_name, $device_id, $from, $to, $granularity_millis = 1){
         // TODO vulnerable to SQL injection through datamappings.json!!
-        if (!($stmt = $this->mysqli->prepare("SELECT timestamp, AVG($column_name) as $column_name FROM $table_name WHERE device_id=? AND timestamp>=? AND timestamp <=? GROUP BY timestamp DIV $granularity_millis ORDER BY timestamp ASC;"))){
+        if (!($stmt = $this->mysqli->prepare("SELECT timestamp, AVG($column_name) as value FROM $table_name WHERE device_id=? AND timestamp>=? AND timestamp <=? GROUP BY timestamp DIV $granularity_millis ORDER BY timestamp ASC;"))){
             echo "Prepare failed: (" . $this->mysqli->errno . ") " . $this->mysqli->error;
         }
         if (!$stmt->bind_param("sdd", $device_id, $from, $to)) {
