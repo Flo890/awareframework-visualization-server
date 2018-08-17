@@ -3,8 +3,10 @@
 /**
  * endpoint parameters:
  * feature_name    one of the features listed in datamappings.json (required)
- * device_id       (required)
- * granularity     one of [max] (optional, default: max)
+ * participant_id (required)
+ * granularity     e.g. 60minutes, where 60 is interchangeable
+ * from            timestamp (seconds)
+ * to              timestamp (seconds)
  */
 header("Access-Control-Allow-Origin: *"); // TODO remove as soon as client hosted from within this project
 header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization');

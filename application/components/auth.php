@@ -37,9 +37,9 @@ if (is_null($username) || !$db_reader->checkUsernamePassword($username, $passwor
 
 }
 
-if($username != $participant_id){
-    die('requested participant_id does not match authorized username');
-}
+//if($username != $participant_id){ TODO
+//    die('requested participant_id does not match authorized username');
+//}
 
 
 

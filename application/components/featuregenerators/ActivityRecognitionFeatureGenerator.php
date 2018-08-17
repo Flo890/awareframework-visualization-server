@@ -13,9 +13,10 @@ class ActivityRecognitionFeatureGenerator extends FeatureGenerator
 
     public function getData($device_id, $granularity, $from, $to)
     {
-        if(!$this->checkGranularitySupport(array('/hourly/'), $granularity)) return;
+        if(!$this->checkGranularitySupport(array('/^(\d+)minutes/'), $granularity)) return;
 
         $data = $this->dbreader->queryDatabaseForData('plugin_google_activity_recognition','activity_name', $device_id, $from, $to);
+
         if (sizeof($data) > 0){
            // Android
             $current_timestamp_millis = $this->getGranularityTimestampForTimestamp($granularity, $data[0]['timestamp']);
@@ -53,9 +54,11 @@ class ActivityRecognitionFeatureGenerator extends FeatureGenerator
                 }
                 $current_timestamp_millis += $this->getMillisOfGranularity($granularity);
 
-                $accumulated_data[date($this->getDateFormatForGranularity($granularity),intval(round($current_timestamp_millis/1000)))] = $current_activities;
+                $accumulated_data["$current_timestamp_millis"] = $current_activities;
             }
+
             return $accumulated_data;
+
         }
         else {
             $data = $this->dbreader->queryDatabaseForData('plugin_ios_activity_recognition','activities', $device_id, $from, $to);

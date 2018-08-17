@@ -58,7 +58,27 @@ class FeatureFetcher
             require_once "featuregenerators/$classname.php";
             $feature_generator = new $classname;
 
-            return $feature_generator->getData($device_id, $granularity, $from, $to);
+            $data = $feature_generator->getData($device_id, $granularity, $from, $to);
+
+            // evtl return just one subfeature, if there are multiple
+            if(!isset($this->mappings_config["mappings"][$feature_name]['subfeature'])) {
+                return $data;
+            }
+            else {
+                // filter parameter is set, to return just one of the activities
+                $filtered_data = array();
+                foreach ($data as $timestamp => $activities) {
+                    if (isset($activities[$this->mappings_config["mappings"][$feature_name]['subfeature']])) {
+                        array_push($filtered_data, array(
+                            'timestamp' => floatval($timestamp),
+                            'value' => $activities[$this->mappings_config["mappings"][$feature_name]['subfeature']]
+                        ));
+                    }
+                }
+                return $filtered_data;
+            }
+
+
         }
 
     }

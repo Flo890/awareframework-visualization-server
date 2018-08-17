@@ -83,9 +83,19 @@
       "feature_generator": "ActivityRecognitionFeatureGenerator",
       "display_name": "activity (algo1)"
     },
+    "activity_recognition_still": {
+      "feature_generator": "ActivityRecognitionFeatureGenerator",
+      "display_name": "activity still",
+      "subfeature": "still"
+    },
     "activity_recognition_algo2": {
       "feature_generator": "ActivityRecognitionFeatureGeneratorAlgo2",
       "display_name": "activity (algo2)"
+    },
+    "activity_recognition_still_2": {
+      "feature_generator": "ActivityRecognitionFeatureGeneratorAlgo2",
+      "display_name": "activity still 2",
+      "subfeature": "still"
     },
     "linear_accelerometer": {
       "feature_generator": "LinearAccelerometerFeatureGenerator",
