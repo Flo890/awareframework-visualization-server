@@ -67,12 +67,14 @@ class FeatureFetcher
             else {
                 // filter parameter is set, to return just one of the activities
                 $filtered_data = array();
-                foreach ($data as $timestamp => $activities) {
-                    if (isset($activities[$this->mappings_config["mappings"][$feature_name]['subfeature']])) {
-                        array_push($filtered_data, array(
-                            'timestamp' => floatval($timestamp),
-                            'value' => $activities[$this->mappings_config["mappings"][$feature_name]['subfeature']]
-                        ));
+                if(isset($data) && is_array($data)) {
+                    foreach ($data as $timestamp => $activities) {
+                        if (isset($activities[$this->mappings_config["mappings"][$feature_name]['subfeature']])) {
+                            array_push($filtered_data, array(
+                                'timestamp' => floatval($timestamp),
+                                'value' => $activities[$this->mappings_config["mappings"][$feature_name]['subfeature']]
+                            ));
+                        }
                     }
                 }
                 return $filtered_data;

@@ -40,7 +40,7 @@ class ActivityRecognitionFeatureGenerator extends FeatureGenerator
                     && $data[$index_in_data]['timestamp'] <= $current_timestamp_millis+$this->getMillisOfGranularity($granularity)
                 ){
                     $diff_to_next_logitem = $data[$index_in_data+1]['timestamp'] - $data[$index_in_data]['timestamp'];
-                    $max_milliseconds = $this->getMillisOfGranularity($granularity) - ($data[$index_in_data]['timestamp'] -  $current_timestamp_millis); // limit the amount of seconds to add by the remaining time in this hour
+                    $max_milliseconds = $this->getMillisOfGranularity($granularity) - ($data[$index_in_data]['timestamp'] -  $current_timestamp_millis); // limit the amount of seconds to add by the remaining time in this bin
                     $current_activities[$data[$index_in_data]['activity_name']] += min(intval(round($diff_to_next_logitem/1000)), intval(round($max_milliseconds/1000)));
                     $index_in_data++;
 

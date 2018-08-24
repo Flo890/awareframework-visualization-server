@@ -15,7 +15,7 @@ $db['aware_localxampp']['hostname'] = 'localhost';
 $db['aware_localxampp']['port'] = '3306';
 $db['aware_localxampp']['username'] = 'root';
 $db['aware_localxampp']['password'] = '';
-$db['aware_localxampp']['database'] = '_1906_11-8';
+$db['aware_localxampp']['database'] = 'Bemmann_1';
 $db['aware_localxampp']['database_aware_dashboard'] = 'aware_dashboard'; // do not change
 
 
